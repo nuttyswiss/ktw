@@ -92,6 +92,7 @@ using something like [htmx] to send the contents of a code snippet to a backend
 processing service. This would take things from a purely static site to one
 that contacts other APIs to process the code snippets.
 - [ ] Add some sort of [Bluesky] integration to allow for comments on posts.
+- [ ] Add rsync support, sftp will get slow(er) over time.
 
 [Hugo]: https://gohugo.io/
 [Caddy]: https://caddyserver.com/
