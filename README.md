@@ -91,6 +91,7 @@ possibly tags for articles.
 using something like [htmx] to send the contents of a code snippet to a backend
 processing service. This would take things from a purely static site to one
 that contacts other APIs to process the code snippets.
+- [ ] Add some sort of [Bluesky] integration to allow for comments on posts.
 
 [Hugo]: https://gohugo.io/
 [Caddy]: https://caddyserver.com/
@@ -99,3 +100,4 @@ that contacts other APIs to process the code snippets.
 [rsc.io/markdown]: https://pkg.go.dev/rsc.io/markdown
 [html/template]: https://pkg.go.dev/html/template
 [htmx]: https://htmx.org/
+[Bluesky]: https://bsky.app/
