@@ -68,8 +68,10 @@ $ web --config canary.yaml --site ~/some/site publish
 
 ## Future Work
 
-- [ ] Finish up transition to using [html/template] and allow for use of
+- [X] Finish up transition to using [html/template] and allow for use of
 template variables within HTML templates as well as Markdown content.
+- [ ] Cleanup frontmatter parsing and passing of frontmatter to templating
+engine.
 - [ ] Integrate D2 parsing, maybe something like [github.com/FurqanSoftware/goldmark-d2],
 or write our own to directly use [oss.terrastruct.com/d2].
 - [ ] Write a code block parser that can use a "before"/"after" method to show
@@ -83,6 +85,12 @@ point to write a smaller and more targeted Markdown parser and HTML converter.
 an index of a set of pages.
 - [ ] Write support for "default frontmatter"/"metadata", such that we do not
 need to repeat ourselves ad'nauseum.
+- [ ] Think about how I'd like indexing to work; within article navigation, and
+possibly tags for articles.
+- [ ] Think about how to do other custom code snippet processing. Possibly by
+using something like [htmx] to send the contents of a code snippet to a backend
+processing service. This would take things from a purely static site to one
+that contacts other APIs to process the code snippets.
 
 [Hugo]: https://gohugo.io/
 [Caddy]: https://caddyserver.com/
@@ -90,3 +98,4 @@ need to repeat ourselves ad'nauseum.
 [oss.terrastruct.com/d2]: https://pkg.go.dev/oss.terrastruct.com/d2
 [rsc.io/markdown]: https://pkg.go.dev/rsc.io/markdown
 [html/template]: https://pkg.go.dev/html/template
+[htmx]: https://htmx.org/

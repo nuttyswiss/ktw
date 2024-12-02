@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"text/template"
 
 	"github.com/nuttyswiss/ktw"
 	"github.com/spf13/cobra"
@@ -41,6 +42,14 @@ func splitContent(buf []byte) ([]byte, []byte, []byte, error) {
 	return delim, meta, content, nil
 }
 
+func parseTemplates(paths []string) (*template.Template, error) {
+	tmpl, err := template.New("").Delims("<<", ">>").ParseFiles(paths...)
+	if err != nil {
+		return nil, err
+	}
+	return tmpl, nil
+}
+
 // generate traverses a directory of files representing a web site. For each
 // file that we encounter, if it is a file that we need to process, we go and
 // process that file (usually generate an HTML file from Markdown).
@@ -51,6 +60,16 @@ func generate(cmd *cobra.Command, args []string) error {
 	root := viper.GetString("dir")
 	if root == "" {
 		return fmt.Errorf("config is missing 'dir' key")
+	}
+
+	var templates *template.Template
+	tmplPaths := viper.GetStringSlice("templates")
+	if len(tmplPaths) != 0 {
+		tmpl, err := parseTemplates(tmplPaths)
+		if err != nil {
+			return err
+		}
+		templates = tmpl
 	}
 
 	fmt.Printf("Generating from %s\n", root)
@@ -85,17 +104,29 @@ func generate(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return fmt.Errorf("failed to split content in %q: %w", srcpath, err)
 		}
-		metadata := make(map[string]any)
+		metadata := make(map[string]string)
 		if bytes.HasPrefix(delim, []byte("---")) {
 			if err := yaml.Unmarshal(frontmatter, metadata); err != nil {
 				return fmt.Errorf("failed to parse metadata in %q: %w", srcpath, err)
 			}
 		}
+		title := name
+		if tt, ok := metadata["title"]; ok {
+			title = tt
+		}
+		var tmpl *template.Template
+		if tmplName, ok := metadata["style"]; ok {
+			tmpl = templates.Lookup(tmplName + ".tmpl")
+			if tmpl == nil {
+				return fmt.Errorf("template %q not found", tmplName+".tmpl")
+			}
+		}
 
 		page := ktw.Page{
-			Title:    name,
+			Title:    title,
 			Metadata: metadata,
 			Contents: []ktw.Renderer{ktw.Markdown(content)},
+			Template: tmpl,
 		}
 		var outbuf bytes.Buffer
 		if err := page.Render(context.Background(), &outbuf); err != nil {
