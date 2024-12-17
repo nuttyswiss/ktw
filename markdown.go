@@ -5,6 +5,7 @@ import (
 	"io"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
+	d2 "github.com/nuttyswiss/goldmark-d2"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/extension"
@@ -35,10 +36,10 @@ func (m Markdown) Render(ctx context.Context, w io.Writer) error {
 			// sort of workspace override. As I'm not quite in need of the D2 extension, I'll
 			// leave it as a todo at this point. Note, this would be as a means to surplant
 			// my current use of Excalidraw+.
-			// &d2.Extender{
-			// 	Layout:  d2elklayout.Layout,
-			// 	ThemeID: &d2themescatalog.Terminal.ID,
-			// },
+			&d2.Extender{
+				// Layout:  d2elklayout.Layout,
+				// ThemeID: &d2themescatalog.Terminal.ID,
+			},
 			NewCustomCodeHighlight(),
 		),
 		goldmark.WithParserOptions(

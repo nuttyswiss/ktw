@@ -1,6 +1,8 @@
 package ktw
 
 import (
+	"strings"
+
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
@@ -27,6 +29,12 @@ func (b *NoteBlockParser) Trigger() []byte {
 }
 
 func (b *NoteBlockParser) Open(parent ast.Node, reader text.Reader, pc parser.Context) (ast.Node, parser.State) {
+	buf, _ := reader.PeekLine()
+	found := strings.HasPrefix(string(buf), "Note:")
+	pos := pc.BlockOffset()
+	if pos < 0 || !found {
+		return nil, parser.NoChildren
+	}
 	p, state := b.BlockParser.Open(parent, reader, pc)
 	if p != nil {
 		// Set the "class" attribute for the paragraph
